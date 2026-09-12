@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>PRINTPRO — Sistem Manajemen Percetakan</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:#f3f6fb;color:#172033}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app{min-height:100vh}
+.loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#0f172a,#1e293b 55%,#334155);display:flex;align-items:center;justify-content:center;padding:20px;z-index:9999}.loginCard{width:min(410px,100%);background:#fff;border-radius:22px;padding:30px;box-shadow:0 25px 70px rgba(0,0,0,.35)}.loginLogo{width:62px;height:62px;border-radius:17px;background:linear-gradient(135deg,#2563eb,#06b6d4);display:grid;place-items:center;color:#fff;font-size:30px;margin:0 auto 14px}.loginCard h1{text-align:center;margin:0;font-size:25px}.loginCard p{text-align:center;color:#64748b;font-size:13px;margin:7px 0 22px}.loginError{display:none;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;border-radius:9px;padding:10px;font-size:12px;margin-bottom:10px}.loginInputWrap{position:relative}.loginInputWrap input{padding-right:48px}.loginEye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;background:transparent;cursor:pointer;border-radius:9px;font-size:18px;display:grid;place-items:center}.loginEye:hover{background:#f1f5f9}.loginEye:active{transform:translateY(-50%) scale(.96)}
+.loginCard .field{margin-bottom:13px}.loginCard .btn{width:100%;padding:12px;font-weight:700}.logoutBtn{margin-top:12px;width:100%}
+
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:#111827;color:white;padding:20px 14px;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;padding:5px 8px 22px}.brandIcon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#2563eb,#06b6d4);display:grid;place-items:center;font-size:21px}.brand b{font-size:19px}.brand small{display:block;color:#94a3b8;margin-top:2px}
+.nav button{display:block;width:100%;background:transparent;color:#cbd5e1;border:0;border-radius:10px;padding:12px;text-align:left;margin:3px 0}.nav button:hover,.nav button.active{background:#1e293b;color:#fff}
+.main{margin-left:245px;padding:22px;min-height:100vh}.mobilebar{display:none}.top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}.top h1{margin:0;font-size:25px}.muted{font-size:13px;color:#64748b;margin-top:4px}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid #dbe3ed;background:white;color:#334155;border-radius:9px;padding:10px 13px}.primary{background:#2563eb;border-color:#2563eb;color:white}.danger{color:#dc2626}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:white;border:1px solid #e5eaf1;border-radius:15px;padding:17px;box-shadow:0 4px 18px rgba(15,23,42,.05)}
+.stat{display:flex;align-items:center;justify-content:space-between}.stat .icon{width:42px;height:42px;border-radius:12px;background:#eff6ff;display:grid;place-items:center;font-size:20px}.value{font-size:24px;font-weight:800;margin-top:7px}.mini{font-size:12px;color:#64748b;margin-top:3px}.section{margin-top:16px}.layout2{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.sectionhead h2{font-size:17px;margin:0}.tablewrap{overflow:auto}.table{border-collapse:collapse;width:100%;min-width:760px}.table th,.table td{padding:11px 9px;border-bottom:1px solid #edf1f5;text-align:left;font-size:13px}.table th{color:#64748b;font-weight:700}.badge{display:inline-block;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:700}.new{background:#dbeafe;color:#1d4ed8}.print{background:#fef3c7;color:#92400e}.finish{background:#ede9fe;color:#6d28d9}.ready{background:#dcfce7;color:#15803d}.done{background:#e2e8f0;color:#475569}.progress{height:8px;background:#e5e7eb;border-radius:10px;overflow:hidden}.progress i{display:block;height:100%;background:#2563eb}.empty{text-align:center;color:#94a3b8;padding:30px}
+.productgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.product{border:1px solid #e5e7eb;border-radius:12px;padding:14px}.product b{display:block;margin-bottom:6px}.product h3{margin:9px 0}.settings{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin-bottom:10px}.field label{display:block;font-size:12px;font-weight:700;color:#475569;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;padding:10px;border:1px solid #dbe3ed;border-radius:9px;background:white}.field textarea{min-height:85px;resize:vertical}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:50;display:grid;place-items:center;padding:15px}.modal.hidden,.receiptOverlay.hidden{display:none}.modalbox{width:min(760px,100%);max-height:92vh;overflow:auto;background:white;border-radius:17px;padding:20px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.modalfoot{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}
+.search{border:1px solid #dbe3ed;border-radius:9px;padding:10px;min-width:220px}
+.receiptOverlay{position:fixed;inset:0;background:rgba(15,23,42,.72);z-index:60;display:grid;place-items:center;padding:15px}.receiptWrap{max-height:95vh;overflow:auto}.receipt{width:380px;max-width:94vw;background:#fff;color:var(--receipt-text,#111);border:2px solid var(--receipt-side,#e5e7eb);padding:21px 19px 17px;font-family:Arial,Helvetica,sans-serif;box-shadow:0 18px 50px rgba(0,0,0,.3)}
+.receiptWatermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;overflow:hidden}.receiptWatermark span{font-size:52px;font-weight:900;letter-spacing:3px;transform:rotate(-28deg);opacity:.08;color:var(--receipt-primary);white-space:nowrap}.receiptContent{position:relative;z-index:1}.receipt{position:relative;overflow:hidden}.receiptBrand{position:relative;text-align:left;padding:4px 4px 13px;border-bottom:1px solid var(--receipt-side,#e5e7eb);overflow:hidden}.receiptBrand:after{content:"";position:absolute;right:-42px;top:-65px;width:155px;height:155px;border:10px solid #f9a8d4;border-radius:50%}.receiptLogo{font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1.05;max-width:75%;word-break:break-word}.receiptLogo:before{content:"";display:inline-block;width:24px;height:24px;margin-right:8px;vertical-align:-2px;border-radius:7px;background:linear-gradient(135deg,#ec4899 0 42%,#06b6d4 42% 67%,#facc15 67%)}.receiptTag{font-size:9px;font-weight:800;letter-spacing:.8px;color:#222;margin:5px 0 0 32px}.receiptMotto{font-size:10px;font-weight:800;color:var(--receipt-primary);margin:4px 0 0 32px}.receiptContact{font-size:9.5px;line-height:1.65;margin:7px 0 0 32px;color:#444;white-space:pre-line;overflow-wrap:anywhere}.dash{border:0;border-top:1px solid #aab2bd;margin:11px 0}.receiptTitle{text-align:center;font-size:15px;font-weight:900;letter-spacing:1px;margin:0;background:linear-gradient(90deg,var(--receipt-secondary),var(--receipt-primary));color:#fff;padding:11px 8px;border-radius:7px}.receiptTitle:before,.receiptTitle:after{content:""}.rmeta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}.metaBox{background:var(--receipt-meta);border-radius:6px;padding:7px}.metaLabel{font-size:8px;color:#64748b;text-transform:uppercase;letter-spacing:.4px}.metaValue{font-size:10.5px;font-weight:800;margin-top:2px;word-break:break-word}.itemHead{display:grid;grid-template-columns:1fr 42px 80px;gap:6px;background:var(--receipt-table, var(--receipt-primary));color:#fff;padding:7px;border-radius:6px 6px 0 0;font-size:9px;font-weight:800}.item{padding:8px;border:1px solid var(--receipt-side,#e5e7eb);border-top:0}.itemMain{display:grid;grid-template-columns:1fr 42px 80px;gap:6px;font-size:11px;font-weight:800}.itemMain span:nth-child(2){text-align:center}.itemMain span:nth-child(3){text-align:right}.itemSub{font-size:9px;color:#555;margin-top:3px}.totalBox{margin-top:9px;border:1px solid var(--receipt-side,#e5e7eb);border-radius:7px;overflow:hidden}.sumRow{display:flex;justify-content:space-between;padding:6px 9px;font-size:10.5px;border-bottom:1px solid #edf1f5}.sumRow:last-child{border-bottom:0}.sumRow.total{background:var(--receipt-total, var(--receipt-light));font-size:13px!important;font-weight:900}.sumRow.sisa{background:var(--receipt-total, var(--receipt-light));font-size:12px!important;font-weight:900}.paid{background:var(--receipt-status, #dcfce7);border:1px solid #86efac;color:#15803d;text-align:center;border-radius:7px;padding:9px;margin:9px 0;font-size:13px;font-weight:900}.thanks{text-align:center;font-weight:900;font-size:15px}.small{text-align:center;color:#555;font-size:8.5px;line-height:1.45;margin-top:3px}.serviceRow{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:10px}.service{border:1px solid #f3d1e1;border-radius:6px;text-align:center;padding:5px 2px;font-size:7.5px;font-weight:800;color:#333}.service b{display:block;font-size:14px;color:var(--receipt-primary);margin-bottom:1px}.qr{display:none}.receiptFooter{margin:10px -19px -17px;padding:13px 10px 11px;text-align:center;font-size:9px;font-weight:800;color:#fff;background:var(--receipt-footer, linear-gradient(135deg,var(--receipt-secondary),var(--receipt-primary)));position:relative;overflow:hidden}.receiptFooter:before{content:"";display:block;height:12px;position:absolute;left:-5%;right:-5%;top:-7px;background:#f9a8d4;border-radius:50%}.receiptActions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:11px}.receiptActions .btn{padding:9px 12px}
+.toast{position:fixed;right:18px;bottom:18px;background:#111827;color:white;padding:11px 14px;border-radius:9px;z-index:100}.toast.hidden{display:none}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:.2s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:15px}.mobilebar{display:flex;background:#111827;color:white;margin:-15px -15px 15px;padding:12px 15px;align-items:center;justify-content:space-between}.mobilebar button{background:white;border:0;padding:7px 10px}.grid{grid-template-columns:1fr 1fr}.layout2,.settings{grid-template-columns:1fr}.productgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.grid{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.search{min-width:0;width:100%}.top{align-items:flex-start;flex-direction:column}.actions{width:100%}.productgrid{grid-template-columns:1fr}}
+@media print{body>*{display:none!important}.receiptOverlay{display:block!important;position:absolute!important;inset:0!important;background:white!important}.receiptWrap{overflow:visible!important}.receipt{margin:0 auto;box-shadow:none}.receiptActions{display:none!important}}
+
+.paymentJpgOverlay{position:fixed;inset:0;background:rgba(15,23,42,.75);z-index:70;display:grid;place-items:center;padding:12px}
+.paymentJpgOverlay.hidden{display:none}
+.jpgPanel{width:min(1100px,100%);height:min(94vh,900px);background:#f8fafc;border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.jpgHead{background:linear-gradient(100deg,#be185d,#ec4899);color:#fff;padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.jpgHead h2{margin:0;font-size:20px}.jpgHead small{opacity:.9}.jpgBody{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px;padding:14px;overflow:hidden;flex:1}
+.jpgPreview{background:#e9eef5;border-radius:13px;display:flex;justify-content:center;align-items:flex-start;overflow:auto;padding:18px}
+.jpgPreview img{width:min(100%,620px);height:auto;background:white;box-shadow:0 8px 30px #0002}
+.jpgTools{background:white;border:1px solid #e2e8f0;border-radius:13px;padding:15px;overflow:auto}
+.toolTitle{font-weight:800;margin:2px 0 12px}.fileInfo{background:#f8fafc;border-radius:10px;padding:11px;font-size:12px;line-height:1.7;margin-bottom:12px}
+.jpgAction{width:100%;padding:13px;border-radius:10px;margin:5px 0;font-weight:800}.green{background:#16a34a;color:#fff}.blue{background:#2563eb;color:#fff}.pink{background:#e60073;color:#fff}
+@media(max-width:800px){.jpgBody{grid-template-columns:1fr}.jpgTools{max-height:290px}.jpgPreview{min-height:400px}}
+
+.paymentToolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.paySearch{flex:1;min-width:210px}.payFilter{min-width:150px}
+.payStatus{font-weight:800}.payStatus.lunas{color:#15803d}.payStatus.dp{color:#b45309}.payStatus.belum{color:#dc2626}
+.payProgress{height:7px;background:#e5e7eb;border-radius:10px;overflow:hidden;margin-top:5px;min-width:90px}.payProgress i{display:block;height:100%;background:#16a34a}
+.payHistory{font-size:12px;color:#64748b;margin-top:5px}.payAction{display:flex;gap:5px;flex-wrap:wrap}
+.paymentSummary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.summaryBox{padding:11px;border-radius:10px;background:#f8fafc;border:1px solid #e5e7eb}.summaryBox b{display:block;font-size:16px;margin-top:4px}
+@media(max-width:700px){.paymentSummary{grid-template-columns:1fr}.payAction .btn{width:100%}}
+.customerSuggest{position:relative}.customerList{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:30;background:#fff;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 10px 25px #0002;max-height:220px;overflow:auto}.customerItem{padding:10px 12px;cursor:pointer;border-bottom:1px solid #f1f5f9}.customerItem:last-child{border-bottom:0}.customerItem:hover{background:#fff1f7}.customerItem b{display:block}.customerItem small{color:#64748b}.customerEmpty{padding:10px 12px;color:#64748b;font-size:12px}.deadlineBox{border-left:4px solid #e60073}.deadlineBox .metaValue{color:#c2185b;font-weight:900}.deadlineBadge{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;background:#fff1f7;color:#c2185b;font-weight:800;font-size:12px}
+/* PRINTPRO V26 — Professional responsive UI */
+:root{--pp-primary:#2563eb;--pp-dark:#0f172a;--pp-muted:#64748b;--pp-bg:#f5f7fb;--pp-border:#e6ebf2;--pp-radius:16px}
+html{scroll-behavior:smooth}body{background:linear-gradient(180deg,#f8fafc 0,#f3f6fb 55%,#eef2f7 100%);font-size:14px;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{outline:none}button{transition:transform .12s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease}button:active{transform:scale(.98)}
+.sidebar{width:260px;padding:18px 13px;background:linear-gradient(180deg,#0b1220 0%,#111827 48%,#172033 100%);box-shadow:8px 0 28px rgba(15,23,42,.10);border-right:1px solid rgba(255,255,255,.05)}
+.brand{padding:7px 9px 24px;gap:11px}.brandIcon{width:45px;height:45px;border-radius:14px;box-shadow:0 8px 22px rgba(37,99,235,.25)}.brand b{font-size:20px;letter-spacing:.3px}.brand small{font-size:10px;letter-spacing:.5px}
+.nav{display:flex;flex-direction:column;gap:4px}.nav button{padding:12px 13px;border:1px solid transparent;font-size:13px;font-weight:600;letter-spacing:.1px}.nav button:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.06);transform:translateX(2px)}.nav button.active{background:linear-gradient(90deg,rgba(37,99,235,.30),rgba(37,99,235,.10));border-color:rgba(96,165,250,.18);box-shadow:inset 3px 0 0 #60a5fa}
+.main{margin-left:260px;padding:28px;max-width:1800px}.mobilebar{border-radius:14px;box-shadow:0 8px 24px rgba(15,23,42,.12);margin-bottom:18px}.top{margin-bottom:20px}.top h1{font-size:28px;letter-spacing:-.5px}.muted{line-height:1.45}.actions{gap:9px}
+.btn{border-color:#dbe3ed;border-radius:11px;padding:10px 14px;font-weight:600;box-shadow:0 1px 2px rgba(15,23,42,.03)}.btn:hover{border-color:#cbd5e1;box-shadow:0 5px 14px rgba(15,23,42,.08);transform:translateY(-1px)}.primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);box-shadow:0 7px 18px rgba(37,99,235,.20)}
+.grid{gap:16px}.card{border-color:var(--pp-border);border-radius:var(--pp-radius);padding:19px;box-shadow:0 7px 24px rgba(15,23,42,.055);transition:transform .18s ease,box-shadow .18s ease}.card:hover{box-shadow:0 12px 30px rgba(15,23,42,.08)}.stat .icon{width:46px;height:46px;border-radius:14px}.value{font-size:26px;letter-spacing:-.4px}
+.layout2{gap:16px}.section{margin-top:18px}.sectionhead{margin-bottom:14px}.sectionhead h2{font-size:18px}.tablewrap{border:1px solid #edf1f5;border-radius:12px}.table{min-width:780px}.table th{background:#f8fafc;font-size:12px;text-transform:uppercase;letter-spacing:.35px}.table th,.table td{padding:12px 10px}.table tbody tr:hover{background:#fafcff}
+.formgrid{gap:12px}.field{margin-bottom:8px}.field label{font-size:12px;margin-bottom:6px}.field input,.field select,.field textarea,.search{border-color:#d8e1ec;border-radius:10px;padding:11px 12px;min-height:42px;transition:border-color .15s,box-shadow .15s}.field input:focus,.field select:focus,.field textarea:focus,.search:focus{border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,.13)}
+.modal{backdrop-filter:blur(5px)}.modalbox{border-radius:20px;padding:22px;box-shadow:0 25px 70px rgba(15,23,42,.22)}.receiptOverlay{backdrop-filter:blur(5px)}
+.productgrid{gap:14px}.product{border-color:#e5eaf1;border-radius:14px;padding:16px;background:linear-gradient(180deg,#fff,#fbfdff)}
+.toast{right:24px;bottom:24px;border-radius:12px;box-shadow:0 12px 30px rgba(15,23,42,.22);font-weight:600}
+.logoutDashBtn{border-color:#fecaca;color:#b91c1c;background:#fff}.logoutDashBtn:hover{background:#fef2f2;border-color:#fca5a5}
+@media(min-width:901px){.main>#content{max-width:1550px}.top{position:relative}.mobilebar{display:none}.loginCard{box-shadow:0 30px 90px rgba(0,0,0,.30)}}
+@media(max-width:1200px) and (min-width:901px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.main{padding:22px}}
+@media(max-width:900px){
+ body{font-size:14px}.sidebar{width:min(285px,88vw);box-shadow:18px 0 45px rgba(0,0,0,.25)}
+ .main{padding:12px;overflow-x:hidden}.mobilebar{position:sticky;top:0;z-index:19;margin:-12px -12px 16px;padding:12px 14px;border-radius:0 0 14px 14px;background:linear-gradient(135deg,#0f172a,#1e293b)}.mobilebar b{font-size:16px;letter-spacing:.3px}.mobilebar button{width:42px;height:38px;border-radius:10px;font-size:18px;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+ .top{align-items:stretch;gap:12px}.top h1{font-size:23px}.actions{width:100%}.actions .btn{flex:1;min-width:0}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:15px;border-radius:14px}.stat .icon{width:40px;height:40px;font-size:18px}.value{font-size:21px}.mini{font-size:11px}
+ .layout2,.settings{grid-template-columns:1fr;gap:12px}.section{margin-top:12px}.sectionhead{align-items:flex-start}.sectionhead .btn{white-space:nowrap}.tablewrap{border-radius:11px}.table{min-width:720px}.table th,.table td{padding:10px 9px}
+ .modal{padding:10px}.modalbox{width:100%;max-height:94vh;border-radius:17px;padding:16px}.formgrid{grid-template-columns:1fr 1fr;gap:9px}.full{grid-column:1/-1}.modalfoot{margin-top:12px}.modalfoot .btn{flex:1}
+ .receipt{width:min(380px,94vw)}.receiptActions .btn{flex:1}.paymentSummary{grid-template-columns:1fr}.jpgBody{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+ .main{padding:10px}.mobilebar{margin:-10px -10px 13px}.top h1{font-size:21px}.muted{font-size:12px}.actions{display:grid;grid-template-columns:1fr 1fr}.actions .btn{width:100%}.grid{grid-template-columns:1fr 1fr;gap:8px}.card{padding:13px}.stat{gap:8px}.stat .icon{width:36px;height:36px;font-size:16px}.value{font-size:19px}.mini{font-size:10px}
+ .sectionhead{gap:7px}.sectionhead h2{font-size:16px}.sectionhead .btn{padding:8px 10px;font-size:12px}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.modalfoot{display:grid;grid-template-columns:1fr 1fr}.search{width:100%;min-width:0}.productgrid{grid-template-columns:1fr}.settings{grid-template-columns:1fr}
+ .loginScreen{padding:14px}.loginCard{padding:23px 18px;border-radius:19px}.loginCard h1{font-size:22px}
+ .toast{left:12px;right:12px;bottom:12px;text-align:center}
+}
+@media(max-width:360px){.grid{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.top h1{font-size:20px}}
+@media(hover:none){.card:hover,.btn:hover{transform:none;box-shadow:inherit}.nav button:hover{transform:none}}
+
+/* PRINTPRO V27 — Robust Android WebView / APK mobile fallback */
+html.pp-mobile, html.pp-mobile body{width:100%;max-width:100%;overflow-x:hidden}
+html.pp-mobile .app{width:100%;min-width:0;overflow-x:hidden}
+html.pp-mobile .sidebar{width:min(285px,88vw)!important;transform:translateX(-105%)!important;transition:.2s;z-index:100}
+html.pp-mobile .sidebar.open{transform:translateX(0)!important}
+html.pp-mobile .main{width:100%!important;max-width:none!important;margin-left:0!important;padding:10px!important;overflow-x:hidden!important}
+html.pp-mobile .mobilebar{display:flex!important;position:sticky;top:0;z-index:99;margin:-10px -10px 13px!important;padding:12px 14px!important;border-radius:0 0 14px 14px;background:linear-gradient(135deg,#0f172a,#1e293b);align-items:center;justify-content:space-between}
+html.pp-mobile .mobilebar b{font-size:16px}
+html.pp-mobile .top{display:flex;flex-direction:column;align-items:stretch;gap:10px}
+html.pp-mobile .top h1{font-size:21px;line-height:1.2}
+html.pp-mobile .actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+html.pp-mobile .actions .btn{width:100%;min-width:0;min-height:44px}
+html.pp-mobile .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}
+html.pp-mobile .card{width:100%;min-width:0;padding:13px;border-radius:14px}
+html.pp-mobile .stat{min-width:0;gap:7px}
+html.pp-mobile .stat>div:first-child{min-width:0;overflow:hidden}
+html.pp-mobile .value{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.pp-mobile .muted,.pp-mobile .mini{overflow-wrap:anywhere}
+html.pp-mobile .layout2,html.pp-mobile .settings,html.pp-mobile .productgrid{grid-template-columns:1fr;width:100%}
+html.pp-mobile .sectionhead{flex-wrap:wrap}
+html.pp-mobile .tablewrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+html.pp-mobile .table{min-width:720px}
+html.pp-mobile .modal{padding:8px}
+html.pp-mobile .modalbox{width:100%;max-width:100%;max-height:94vh;padding:15px;border-radius:17px}
+html.pp-mobile .formgrid{grid-template-columns:1fr}
+html.pp-mobile .full{grid-column:auto}
+html.pp-mobile .search{width:100%;min-width:0}
+html.pp-mobile .toast{left:12px;right:12px;bottom:12px;text-align:center}
+html.pp-mobile .jpgPanel{width:100%;height:96vh;border-radius:15px}
+html.pp-mobile .jpgBody{grid-template-columns:1fr;overflow:auto}
+html.pp-mobile .jpgTools{max-height:none}
+@media(max-width:380px){html.pp-mobile .grid{grid-template-columns:1fr}html.pp-mobile .actions{grid-template-columns:1fr}html.pp-mobile .value{font-size:19px}}
+
+</style>
+</head>
+<body>
+<div class="loginScreen" id="loginScreen"><div class="loginCard"><div class="loginLogo">🖨️</div><h1>PRINTPRO</h1><p>Login Admin · Sistem Manajemen Percetakan</p><div class="loginError" id="loginError">Username atau password salah.</div><div class="field"><label>Username</label><div class="loginInputWrap"><input id="loginUser" autocomplete="username" placeholder="Masukkan username"><button type="button" class="loginEye" id="loginUserEye" aria-label="Tampilkan username">👁️</button></div></div><div class="field"><label>Password</label><div class="loginInputWrap"><input id="loginPass" type="password" autocomplete="current-password" placeholder="Masukkan password"><button type="button" class="loginEye" id="loginPassEye" aria-label="Tampilkan password">👁️</button></div></div><button class="btn primary" id="loginBtn">🔐 Masuk ke Sistem</button><div style="text-align:center;margin-top:13px;font-size:11px;color:#94a3b8">Akun awal: admin / admin123</div></div></div>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+<div class="brand"><div class="brandIcon">🖨️</div><div><b>PRINTPRO</b><small>Printing Management</small></div></div>
+<nav class="nav" id="nav">
+<button class="active" data-page="dashboard">▦ &nbsp; Dashboard</button>
+<button data-page="orders">🧾 &nbsp; Pesanan</button>
+<button data-page="production">⚙️ &nbsp; Produksi</button>
+<button data-page="products">📦 &nbsp; Produk & Harga</button>
+<button data-page="customers">👥 &nbsp; Pelanggan</button>
+<button data-page="payments">💳 &nbsp; Pembayaran</button>
+<button data-page="stock">📊 &nbsp; Stok</button>
+<button data-page="reports">📈 &nbsp; Laporan</button>
+<button data-page="settings">⚙️ &nbsp; Pengaturan</button>
+</nav>
+</aside>
+<main class="main">
+<div class="mobilebar"><b>PRINTPRO</b><button id="menuBtn">☰</button></div>
+<div id="content"></div>
+</main>
+</div>
+
+<div class="modal hidden" id="orderModal">
+<div class="modalbox">
+<div class="sectionhead"><h2>Tambah Pesanan</h2><button class="btn" id="closeOrder">✕</button></div>
+<div class="formgrid">
+<div class="field customerSuggest"><label>Nama Pelanggan *</label><input id="fName" autocomplete="off" placeholder="Ketik nama pelanggan..."><div id="customerList" class="customerList hidden"></div></div>
+<div class="field"><label>WhatsApp</label><input id="fWa" placeholder="08xxxxxxxxxx"></div>
+<div class="field"><label>Produk</label><select id="fProduct"></select></div>
+<div class="field"><label>Jumlah</label><input id="fQty" type="number" min="1" value="1"></div>
+<div class="field"><label>Ukuran / Spesifikasi</label><input id="fSize" placeholder="Contoh: 2 × 1 meter"></div>
+<div class="field"><label>Harga Satuan</label><input id="fPrice" type="number" value="40000"></div>
+<div class="field"><label>Diskon</label><input id="fDiscount" type="number" min="0" value="0"></div><div class="field"><label>DP / Pembayaran</label><input id="fDp" type="number" value="0"></div>
+<div class="field"><label>Deadline Tanggal</label><input id="fDeadline" type="date"></div><div class="field"><label>Deadline Jam</label><input id="fDeadlineTime" type="time" value="17:00"></div>
+<div class="field full"><label>Catatan / Finishing</label><textarea id="fNote"></textarea></div>
+</div>
+<div class="modalfoot"><button class="btn" id="cancelOrder">Batal</button><button class="btn primary" id="saveOrderBtn">Simpan Pesanan</button></div>
+</div>
+</div>
+
+<div class="receiptOverlay hidden" id="receiptOverlay">
+<div class="receiptWrap">
+<div class="receipt" id="receipt"></div>
+<div class="receiptActions">
+<button class="btn" id="closeReceipt">Tutup</button>
+<button class="btn" id="printBtn">🖨️ Print</button>
+<button class="btn primary" id="shareImageBtn">🖼️ Share Struk</button>
+<button class="btn" id="waBtn">💬 WhatsApp</button>
+</div>
+</div>
+</div>
+
+
+<div class="modal hidden" id="paymentModal"><div class="modalbox" style="max-width:520px">
+<div class="sectionhead"><h2>Tambah Pembayaran</h2><button class="btn" id="closePayment">✕</button></div>
+<div id="paymentInfo" class="fileInfo"></div>
+<div class="formgrid">
+<div class="field"><label>Jumlah Pembayaran *</label><input id="payAmount" type="number" min="0" value="0"></div>
+<div class="field"><label>Metode Pembayaran</label><select id="payMethod"><option>Tunai</option><option>Transfer Bank</option><option>QRIS</option><option>E-Wallet</option></select></div>
+<div class="field full"><label>Catatan Pembayaran</label><textarea id="payNote" placeholder="Contoh: Pelunasan order / DP tahap 2"></textarea></div>
+</div>
+<div class="modalfoot"><button class="btn" id="cancelPayment">Batal</button><button class="btn primary" id="savePayment">Simpan Pembayaran</button></div>
+</div></div>
+<div class="paymentJpgOverlay hidden" id="paymentJpgOverlay">
+ <div class="jpgPanel">
+  <div class="jpgHead">
+   <div><h2>🧾 Struk Pembayaran JPG</h2><small>Preview struk sebelum dikirim ke pelanggan</small></div>
+   <button class="btn" id="closeJpg" style="font-size:20px">✕</button>
+  </div>
+  <div class="jpgBody">
+   <div class="jpgPreview"><img id="jpgPreviewImg" alt="Preview Struk JPG"></div>
+   <div class="jpgTools">
+    <div class="toolTitle">Informasi File</div>
+    <div class="fileInfo" id="jpgFileInfo">Format : JPG<br>Resolusi : HD<br>Status : Siap dibagikan</div>
+    <div class="toolTitle">Aksi</div>
+    <button class="jpgAction green" id="shareJpgBtn">💬 Share JPG • WhatsApp</button>
+    <button class="jpgAction pink" id="downloadJpgBtn">⬇️ Download JPG</button>
+    <button class="jpgAction blue" id="printJpgBtn">🖨️ Print Struk</button>
+    <button class="jpgAction" id="shareOtherBtn">↗️ Bagikan ke Aplikasi Lain</button>
+    <p class="muted"><b>Share JPG:</b> Android akan membuka menu berbagi dengan file JPG sudah terlampir. Pilih WhatsApp untuk mengirimkannya ke pelanggan.<br><br>Struk dibuat dari data pembayaran yang dipilih. Jika perangkat tidak mendukung share file, JPG otomatis dapat disimpan lalu dikirim melalui WhatsApp.</p>
+   </div>
+  </div>
+ </div>
+</div>
+<div class="toast hidden" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+var KEY="printpro_clean_v1";
+var defaults={auth:{username:"admin",password:"admin123"},business:{name:"PRINTPRO",tagline:"PERCETAKAN & DIGITAL PRINTING",address:"Alamat Percetakan Anda",phone:"08xxxxxxxxxx"},watermark:{enabled:true,text:"BUKTI PEMBAYARAN",opacity:0.08,size:52,angle:-28,color:"#e60073"},receiptTheme:{primary:"#e60073",secondary:"#a5004e",light:"#fce7f3",meta:"#fdf1f7",text:"#111827",footer:"#111827",status:"#fce7f3",table:"#e60073",total:"#fce7f3"},
+ orders:[
+ {id:"ORD-001",name:"Budi Santoso",wa:"08123456789",product:"Banner",qty:2,size:"2 × 1 m",price:80000,dp:50000,status:"Cetak",deadline:"2026-09-10",note:"Finishing mata ayam"},
+ {id:"ORD-002",name:"Siti Aulia",wa:"082233445566",product:"Undangan",qty:100,size:"10 × 15 cm",price:2500,dp:250000,status:"Selesai",deadline:"2026-09-09",note:""},
+ {id:"ORD-003",name:"Toko Maju",wa:"085677889900",product:"Sticker",qty:50,size:"A4",price:3000,dp:75000,status:"Finishing",deadline:"2026-09-11",note:"Vinyl glossy"}
+ ],
+ customers:[{name:"Budi Santoso",wa:"08123456789"},{name:"Siti Aulia",wa:"082233445566"},{name:"Toko Maju",wa:"085677889900"}],
+ products:[{name:"Banner",unit:"m²",price:40000},{name:"Sticker",unit:"lembar",price:3000},{name:"Kartu Nama",unit:"box",price:35000},{name:"Brosur",unit:"rim",price:120000},{name:"Undangan",unit:"pcs",price:2500},{name:"X-Banner",unit:"pcs",price:85000}],
+ stock:[{name:"Bahan Banner",unit:"meter",qty:25,min:10},{name:"Vinyl Sticker",unit:"meter",qty:18,min:8},{name:"Tinta",unit:"botol",qty:12,min:5},{name:"Kertas A4",unit:"rim",qty:7,min:3}]
+};
+var db;
+try{var saved=localStorage.getItem(KEY);db=saved?JSON.parse(saved):null;}catch(e){db=null;}
+if(!db||!Array.isArray(db.orders)||!Array.isArray(db.products)){db=JSON.parse(JSON.stringify(defaults))}
+if(!db.auth)db.auth=JSON.parse(JSON.stringify(defaults.auth));if(!db.business)db.business=JSON.parse(JSON.stringify(defaults.business));if(!db.receiptTheme)db.receiptTheme=JSON.parse(JSON.stringify(defaults.receiptTheme));if(!db.receiptTheme.text)db.receiptTheme.text=defaults.receiptTheme.text;if(!db.receiptTheme.status)db.receiptTheme.status=defaults.receiptTheme.status;if(!db.receiptTheme.total)db.receiptTheme.total=defaults.receiptTheme.total;if(!db.receiptTheme.side)db.receiptTheme.side=defaults.receiptTheme.side;if(!db.business.tagline)db.business.tagline=defaults.business.tagline;if(!db.watermark)db.watermark=JSON.parse(JSON.stringify(defaults.watermark));
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db));}catch(e){}}
+function money(n){return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);}
+function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(x){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[x];});}
+function toast(t){var el=document.getElementById("toast");el.textContent=t;el.classList.remove("hidden");setTimeout(function(){el.classList.add("hidden");},2200);}
+function badge(s){var c={"Pesanan Baru":"new","Cetak":"print","Finishing":"finish","Siap Diambil":"ready","Selesai":"done"}[s]||"new";return '<span class="badge '+c+'">'+esc(s)+'</span>';}
+function stat(icon,title,value,sub){return '<div class="card"><div class="stat"><div><div class="muted">'+title+'</div><div class="value">'+value+'</div><div class="mini">'+sub+'</div></div><div class="icon">'+icon+'</div></div></div>';}
+function header(title,sub,actions){return '<div class="top"><div><h1>'+title+'</h1><div class="muted">'+sub+'</div></div><div class="actions">'+(actions||"")+'</div></div>';}
+function orderRows(list){
+if(!list.length)return '<div class="empty">Belum ada pesanan.</div>';
+var out='<div class="tablewrap"><table class="table"><thead><tr><th>Order</th><th>Pelanggan</th><th>Produk</th><th>Total</th><th>Status</th><th>Deadline</th><th>Aksi</th></tr></thead><tbody>';
+list.slice().reverse().forEach(function(o){out+='<tr><td><b>'+esc(o.id)+'</b></td><td>'+esc(o.name)+'</td><td>'+esc(o.product)+' × '+o.qty+'</td><td>'+money(orderTotal(o))+'</td><td>'+badge(o.status)+'</td><td>'+esc(deadlineText(o))+'</td><td><button class="btn notaBtn" data-id="'+esc(o.id)+'">🧾 Nota</button></td></tr>';});
+return out+'</tbody></table></div>';
+}
+function dashboard(){
+var total=db.orders.reduce(function(a,o){return a+orderTotal(o);},0);
+var pending=db.orders.filter(function(o){return o.status!=="Selesai";}).length;
+var ready=db.orders.filter(function(o){return o.status==="Siap Diambil";}).length;
+return header("Dashboard","Ringkasan aktivitas percetakan",'<button class="btn primary" id="newOrder">＋ Pesanan Baru</button> <button class="btn logoutDashBtn" id="dashboardLogout">🚪 Keluar</button>')+
+'<div class="grid">'+stat("💰","Omzet",money(total),"Total order")+stat("🧾","Pesanan",db.orders.length,"Semua pesanan")+stat("⚙️","Diproses",pending,"Perlu tindakan")+stat("✅","Siap Diambil",ready,"Menunggu pelanggan")+'</div>'+
+'<div class="layout2 section"><div class="card"><div class="sectionhead"><h2>Pesanan Terbaru</h2><button class="btn" data-goto="orders">Lihat Semua</button></div>'+orderRows(db.orders.slice(-5))+'</div>'+
+'<div class="card"><div class="sectionhead"><h2>Status Produksi</h2></div>'+["Pesanan Baru","Cetak","Finishing","Siap Diambil","Selesai"].map(function(s){var n=db.orders.filter(function(o){return o.status===s;}).length;var pct=db.orders.length?Math.round(n/db.orders.length*100):0;return '<div style="margin:13px 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>'+s+'</span><b>'+n+'</b></div><div class="progress"><i style="width:'+pct+'%"></i></div></div>';}).join("")+'</div></div>';
+}
+function ordersPage(){
+return header("Manajemen Pesanan","Kelola order, pembayaran, dan deadline",'<input id="searchOrder" class="search" placeholder="Cari order / pelanggan..."><button class="btn primary" id="newOrder">＋ Pesanan Baru</button>')+
+'<div class="card">'+orderRows(db.orders)+'</div>';
+}
+function productionPage(){
+var active=db.orders.filter(function(o){return o.status!=="Selesai";});
+var rows=active.length?'<div class="tablewrap"><table class="table"><thead><tr><th>Order</th><th>Pelanggan</th><th>Produk</th><th>Status</th><th>Ubah</th></tr></thead><tbody>'+active.map(function(o){return '<tr><td>'+o.id+'</td><td>'+esc(o.name)+'</td><td>'+esc(o.product)+'</td><td>'+badge(o.status)+'</td><td><select class="statusSel" data-id="'+o.id+'">'+["Pesanan Baru","Cetak","Finishing","Siap Diambil","Selesai"].map(function(s){return '<option '+(s===o.status?"selected":"")+'>'+s+'</option>';}).join("")+'</select></td></tr>';}).join("")+'</tbody></table></div>':'<div class="empty">Tidak ada pekerjaan aktif.</div>';
+return header("Produksi","Pantau tahapan pekerjaan")+'<div class="grid">'+["Pesanan Baru","Cetak","Finishing","Siap Diambil"].map(function(s){return stat("⚙️",s,active.filter(function(o){return o.status===s;}).length,"Pekerjaan");}).join("")+'</div><div class="card section">'+rows+'</div>';
+}
+function productsPage(){
+return header("Produk & Harga","Atur katalog dan harga dasar",'<button class="btn primary" id="addProduct">＋ Produk</button>')+'<div class="productgrid">'+db.products.map(function(p,i){return '<div class="product"><b>'+esc(p.name)+'</b><div class="muted">Satuan: '+esc(p.unit)+'</div><h3>'+money(p.price)+'</h3><button class="btn editProduct" data-i="'+i+'">Edit Harga</button></div>';}).join("")+'</div>';
+}
+function customersPage(){
+return header("Pelanggan","Database pelanggan dan riwayat transaksi")+'<div class="card"><div class="tablewrap"><table class="table"><thead><tr><th>Nama</th><th>WhatsApp</th><th>Order</th><th>Total</th></tr></thead><tbody>'+db.customers.map(function(c){var os=db.orders.filter(function(o){return o.name===c.name;});var total=os.reduce(function(a,o){return a+orderTotal(o);},0);return '<tr><td><b>'+esc(c.name)+'</b></td><td>'+esc(c.wa||"-")+'</td><td>'+os.length+'</td><td>'+money(total)+'</td></tr>';}).join("")+'</tbody></table></div></div>';
+}
+function paymentsPage(){
+var total=db.orders.reduce(function(a,o){return a+orderTotal(o);},0),paid=db.orders.reduce(function(a,o){return a+paymentPaid(o);},0),remaining=Math.max(0,total-paid);
+var rows='<div class="paymentToolbar"><input id="paySearch" class="search paySearch" placeholder="Cari invoice / pelanggan..."><select id="payFilter" class="btn payFilter"><option value="all">Semua Status</option><option value="lunas">Lunas</option><option value="dp">DP / Sebagian</option><option value="belum">Belum Bayar</option></select></div>';
+rows+='<div class="tablewrap"><table class="table"><thead><tr><th>Invoice</th><th>Pelanggan</th><th>Total</th><th>Dibayar</th><th>Sisa</th><th>Status</th><th>Progress</th><th>Aksi</th></tr></thead><tbody id="paymentRows">'+paymentRows(db.orders)+'</tbody></table></div>';
+return header("Pembayaran","Kelola DP, pelunasan, riwayat pembayaran, dan struk JPG")+
+'<div class="grid">'+stat("💳","Total Tagihan",money(total),"Semua order")+stat("💵","Total Dibayar",money(paid),"Pembayaran masuk")+stat("⚠️","Piutang",money(remaining),"Belum tertagih")+stat("🧾","Invoice",db.orders.length,"Transaksi")+'</div>'+
+'<div class="card section">'+rows+'<div class="paymentSummary"><div class="summaryBox">Lunas <b>'+db.orders.filter(function(o){return paymentPaid(o)>=orderTotal(o);}).length+'</b></div><div class="summaryBox">DP / Sebagian <b>'+db.orders.filter(function(o){var p=paymentPaid(o),t=orderTotal(o);return p>0&&p<t;}).length+'</b></div><div class="summaryBox">Belum Bayar <b>'+db.orders.filter(function(o){return paymentPaid(o)<=0;}).length+'</b></div></div></div>';
+}
+function deadlineDateTime(o){
+ var d=o.deadlineDate||o.deadline||"",t=o.deadlineTime||"";
+ return d?(t?d+"T"+t:d+"T23:59"): "";
+}
+function deadlineText(o){
+ var d=o.deadlineDate||o.deadline||"",t=o.deadlineTime||"";
+ if(!d)return "-";
+ var ds=new Date(d+"T00:00:00").toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"});
+ return ds+(t?" • "+t:"");
+}
+function deadlineStatus(o){
+ var dt=deadlineDateTime(o);if(!dt)return "Tidak ada deadline";
+ var ms=new Date(dt).getTime()-Date.now();
+ if(ms<0)return "Terlambat";
+ if(ms<=24*60*60*1000)return "≤ 24 jam";
+ if(ms<=3*24*60*60*1000)return "≤ 3 hari";
+ return "Aman";
+}
+function orderTotal(o){return Math.max(0,(Number(o.price)||0)*(Number(o.qty)||0)-(Number(o.discount)||0));}
+function paymentPaid(o){var history=Array.isArray(o.payments)?o.payments:[],h=history.reduce(function(a,p){return a+(Number(p.amount)||0);},0);return Math.max(Number(o.dp)||0,h);}
+function paymentRows(list){
+if(!list.length)return '<tr><td colspan="8" class="empty">Tidak ada transaksi.</td></tr>';
+return list.slice().reverse().map(function(o){var t=orderTotal(o),p=Math.min(paymentPaid(o),t),s=Math.max(0,t-p),pct=t?Math.min(100,Math.round(p/t*100)):0,cls=p>=t?"lunas":p>0?"dp":"belum",label=p>=t?"LUNAS":p>0?"DP / SEBAGIAN":"BELUM BAYAR";
+return '<tr><td><b>'+esc(o.id)+'</b><div class="payHistory">'+((o.payments||[]).length)+' pembayaran</div></td><td>'+esc(o.name)+'</td><td>'+money(t)+'</td><td>'+money(p)+'</td><td>'+money(s)+'</td><td><span class="payStatus '+cls+'">'+label+'</span></td><td><div style="font-size:11px">'+pct+'%</div><div class="payProgress"><i style="width:'+pct+'%"></i></div></td><td><div class="payAction"><button class="btn addPayBtn" data-id="'+esc(o.id)+'">＋ Bayar</button><button class="btn jpgBtn" data-id="'+esc(o.id)+'">🖼️ JPG</button></div></td></tr>';}).join("");
+}
+function stockPage(){
+return header("Manajemen Stok","Pantau bahan dan persediaan",'<button class="btn primary" id="addStock">＋ Stok</button>')+'<div class="card"><div class="tablewrap"><table class="table"><thead><tr><th>Bahan</th><th>Satuan</th><th>Stok</th><th>Minimum</th><th>Status</th></tr></thead><tbody>'+db.stock.map(function(s){return '<tr><td><b>'+esc(s.name)+'</b></td><td>'+esc(s.unit)+'</td><td>'+s.qty+'</td><td>'+s.min+'</td><td>'+(s.qty<=s.min?'<span class="badge print">Stok Menipis</span>':'<span class="badge ready">Aman</span>')+'</td></tr>';}).join("")+'</tbody></table></div></div>';
+}
+function reportsPage(){
+var total=db.orders.reduce(function(a,o){return a+orderTotal(o);},0);
+return header("Laporan","Ringkasan kinerja percetakan")+'<div class="grid">'+stat("📈","Omzet",money(total),"Total")+stat("✅","Selesai",db.orders.filter(function(o){return o.status==="Selesai";}).length,"Pesanan")+stat("👥","Pelanggan",db.customers.length,"Terdaftar")+stat("📦","Produk",db.products.length,"Katalog")+'</div><div class="card section"><h2 style="font-size:17px">Produk Terlaris</h2>'+db.products.map(function(p){var n=db.orders.filter(function(o){return o.product===p.name;}).reduce(function(a,o){return a+o.qty;},0);return '<div style="margin:13px 0"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>'+esc(p.name)+'</span><b>'+n+'</b></div><div class="progress"><i style="width:'+Math.min(100,n*15)+'%"></i></div></div>';}).join("")+'</div>';
+}
+function settingsPage(){
+var biz=db.business||defaults.business;
+return header("Pengaturan","Atur identitas yang akan tampil di aplikasi dan struk")+
+'<div class="settings"><div class="card"><h3>Identitas Percetakan</h3>'+
+'<div class="field"><label>Nama Percetakan</label><input id="bizName" value="'+esc(biz.name)+'"></div>'+
+'<div class="field"><label>Tulisan / Jenis Usaha</label><input id="bizTagline" value="'+esc(biz.tagline||"PERCETAKAN & DIGITAL PRINTING")+'" placeholder="Contoh: PERCETAKAN & DIGITAL PRINTING"></div><div class="field"><label>Alamat Lengkap</label><textarea id="bizAddress" placeholder="Tulis alamat per baris. Contoh:\nJl. Gg. Salih, Kp. Selang Jati\nDs. Wanajaya, Kec. Cibitung\nKab. Bekasi">'+esc(biz.address)+'</textarea></div>'+
+'<div class="field"><label>Nomor WhatsApp / Telepon</label><input id="bizPhone" value="'+esc(biz.phone)+'"></div>'+
+'<button class="btn primary" id="saveBusiness">💾 Simpan Identitas</button>'+
+'<p class="muted">Alamat dan nomor WhatsApp ini otomatis digunakan pada header struk dan file JPG yang dibagikan ke pelanggan.</p></div>'+
+'<div class="card"><h3>Warna Struk</h3><div class="field"><label>Warna Judul / Banner</label><input id="rcPrimary" type="color" value="'+esc((db.receiptTheme||defaults.receiptTheme).primary||"#e60073")+'"> </div><div class="field"><label>Warna Header Pendukung</label><input id="rcSecondary" type="color" value="'+esc((db.receiptTheme||defaults.receiptTheme).secondary||"#a5004e")+'"> </div><div class="field"><label>Warna Latar Lainnya</label><input id="rcLight" type="color" value="'+esc((db.receiptTheme||defaults.receiptTheme).light||"#fce7f3")+'"> </div><div class="field"><label>Warna Tabel Produk</label><input id="rcTable" type="color" value="'+esc((db.receiptTheme||defaults.receiptTheme).table||(db.receiptTheme||defaults.receiptTheme).primary||"#e60073")+'"> </div><div class="field"><label>Warna Footer Struk</label><input id="rcFooter" type="color" value="'+esc((db.receiptTheme||defaults.receiptTheme).footer||"#111827")+'"> </div><div class="field"><label>Warna Status DP / LUNAS</label><input id="rcStatus" type="color" value="'+esc((db.receiptTheme||defaults.receiptTheme).status||(db.receiptTheme||defaults.receiptTheme).light||"#fce7f3")+'"> </div><div class="field"><label>Warna Total / Sisa</label><input id="rcTotal" type="color" value="'+esc((db.receiptTheme||defaults.receiptTheme).total||(db.receiptTheme||defaults.receiptTheme).light||"#fce7f3")+'"> </div><div class="field"><label>Warna Sisi / Garis Struk</label><input id="rcSide" type="color" value="'+esc((db.receiptTheme||defaults.receiptTheme).side||"#e5e7eb")+'"> </div><div class="field"><label>Warna Teks Struk</label><input id="rcText" type="color" value="'+esc((db.receiptTheme||defaults.receiptTheme).text||"#111827")+'"> </div><button class="btn primary" id="saveReceiptTheme">💾 Simpan Warna Struk</button><p class="muted">Warna diterapkan pada struk tampilan, JPG dan share gambar.</p></div><div class="card"><h3>Watermark Struk</h3><div class="field"><label><input id="wmEnabled" type="checkbox" style="width:auto;margin-right:7px" '+(db.watermark.enabled?'checked':'')+'> Tampilkan watermark pada struk</label></div><div class="field"><label>Teks Watermark</label><input id="wmText" value="'+esc(db.watermark.text||'BUKTI PEMBAYARAN')+'" placeholder="Contoh: ARSYA PRINTING"></div><div class="field"><label>Transparansi (0.01 - 0.30)</label><input id="wmOpacity" type="number" min="0.01" max="0.30" step="0.01" value="'+Number(db.watermark.opacity||0.08)+'"></div><div class="field"><label>Ukuran Font (20 - 100)</label><input id="wmSize" type="number" min="20" max="100" value="'+Number(db.watermark.size||52)+'"></div><div class="field"><label>Sudut Watermark</label><input id="wmAngle" type="number" min="-60" max="60" value="'+Number(db.watermark.angle||-28)+'"></div><div class="field"><label>Warna Watermark</label><input id="wmColor" type="color" value="'+esc(db.watermark.color||'#e60073')+'"></div><button class="btn primary" id="saveWatermark">💾 Simpan Watermark</button><p class="muted">Watermark tampil samar di tengah struk cetak dan JPG.</p></div><div class="card"><h3>🔐 Akun Login Admin</h3><div class="field"><label>Username Admin</label><div class="loginInputWrap"><input id="adminUser" value="'+esc((db.auth||defaults.auth).username)+'"><button type="button" class="loginEye" id="adminUserEye" aria-label="Tampilkan username">👁️</button></div></div><div class="field"><label>Password Admin</label><div class="loginInputWrap"><input id="adminPass" type="password" value="'+esc((db.auth||defaults.auth).password)+'"><button type="button" class="loginEye" id="adminPassEye" aria-label="Tampilkan password">👁️</button></div></div><button class="btn primary" id="saveAuth">💾 Simpan Akun Login</button><button class="btn logoutBtn" id="logoutBtn">🚪 Keluar / Logout</button><p class="muted">Gunakan akun ini untuk masuk ke PRINTPRO pada perangkat ini.</p></div><div class="card"><h3>Data Aplikasi</h3><p class="muted">Data tersimpan di browser perangkat ini.</p><button class="btn" id="exportData">Export Backup JSON</button> <button class="btn danger" id="resetData">Reset Data</button></div></div>';
+}
+var pages={dashboard:dashboard,orders:ordersPage,production:productionPage,products:productsPage,customers:customersPage,payments:paymentsPage,stock:stockPage,reports:reportsPage,settings:settingsPage};
+function logout(){sessionStorage.removeItem("printpro_logged_in");document.getElementById("loginScreen").style.display="flex";document.getElementById("loginUser").value="";document.getElementById("loginPass").value="";document.getElementById("loginError").style.display="none";}
+function initLogin(){var ls=document.getElementById("loginScreen"),btn=document.getElementById("loginBtn"),u=document.getElementById("loginUser"),pw=document.getElementById("loginPass"),err=document.getElementById("loginError");var ue=document.getElementById("loginUserEye"),pe=document.getElementById("loginPassEye");function toggleInput(input,eye){var show=input.type==="password";input.type=show?"text":"password";eye.textContent=show?"🙈":"👁️";eye.setAttribute("aria-label",show?"Sembunyikan":"Tampilkan");}if(ue)ue.onclick=function(){toggleInput(u,ue);};if(pe)pe.onclick=function(){toggleInput(pw,pe);};function attempt(){var a=db.auth||defaults.auth;if(u.value.trim()===a.username&&pw.value===a.password){sessionStorage.setItem("printpro_logged_in","1");ls.style.display="none";render("dashboard");}else{err.style.display="block";pw.value="";pw.focus();}}btn.onclick=attempt;u.addEventListener("keydown",function(e){if(e.key==="Enter")attempt();});pw.addEventListener("keydown",function(e){if(e.key==="Enter")attempt();});if(sessionStorage.getItem("printpro_logged_in")==="1")ls.style.display="none";else ls.style.display="flex";}
+function render(name){
+var content=document.getElementById("content");
+try{content.innerHTML=pages[name]();}catch(e){content.innerHTML='<div class="card"><h2>Terjadi kesalahan</h2><p>'+esc(e.message)+'</p></div>';console.error(e);}
+bindContent(name);
+}
+function bindContent(name){
+document.querySelectorAll("[data-goto]").forEach(function(x){x.onclick=function(){navigate(x.getAttribute("data-goto"));};});
+var newBtn=document.getElementById("newOrder");if(newBtn)newBtn.onclick=openOrder;var dlo=document.getElementById("dashboardLogout");if(dlo)dlo.onclick=function(){if(confirm("Yakin ingin keluar dari PRINTPRO?"))logout();};
+document.querySelectorAll(".notaBtn").forEach(function(x){x.onclick=function(){showReceipt(x.getAttribute("data-id"));};});
+document.querySelectorAll(".jpgBtn").forEach(function(x){x.onclick=function(){openPaymentJpg(x.getAttribute("data-id"));};});
+document.querySelectorAll(".addPayBtn").forEach(function(x){x.onclick=function(){openPayment(x.getAttribute("data-id"));};});
+var ps=document.getElementById("paySearch"),pf=document.getElementById("payFilter");if(ps)ps.oninput=filterPayments;if(pf)pf.onchange=filterPayments;
+var search=document.getElementById("searchOrder");if(search)search.oninput=function(){var q=search.value.toLowerCase();var card=document.querySelector("#content .card:last-child");if(card)card.innerHTML=orderRows(db.orders.filter(function(o){return (o.id+" "+o.name+" "+o.product).toLowerCase().indexOf(q)>=0;}));document.querySelectorAll(".notaBtn").forEach(function(x){x.onclick=function(){showReceipt(x.getAttribute("data-id"));};});};
+document.querySelectorAll(".statusSel").forEach(function(x){x.onchange=function(){var o=db.orders.find(function(z){return z.id===x.getAttribute("data-id");});if(o){o.status=x.value;save();render("production");toast("Status diperbarui");}};});
+var ap=document.getElementById("addProduct");if(ap)ap.onclick=function(){var n=prompt("Nama produk");if(!n)return;var u=prompt("Satuan","pcs")||"pcs";var pr=Number(prompt("Harga",50000)||0);db.products.push({name:n,unit:u,price:pr});save();render("products");};
+document.querySelectorAll(".editProduct").forEach(function(x){x.onclick=function(){var i=Number(x.getAttribute("data-i")),v=prompt("Harga "+db.products[i].name,db.products[i].price);if(v!==null){db.products[i].price=Number(v)||0;save();render("products");}};});
+var as=document.getElementById("addStock");if(as)as.onclick=function(){var n=prompt("Nama bahan");if(!n)return;var u=prompt("Satuan","pcs")||"pcs";var q=Number(prompt("Jumlah",10)||0),m=Number(prompt("Minimum",3)||0);db.stock.push({name:n,unit:u,qty:q,min:m});save();render("stock");};
+var ex=document.getElementById("exportData");if(ex)ex.onclick=function(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:"application/json"}));a.download="printpro-backup.json";a.click();};
+var rs=document.getElementById("resetData");if(rs)rs.onclick=function(){if(confirm("Reset data ke data demo?")){db=JSON.parse(JSON.stringify(defaults));save();render("dashboard");}};
+var sr=document.getElementById("saveReceiptTheme");if(sr)sr.onclick=function(){db.receiptTheme={primary:document.getElementById("rcPrimary").value,table:document.getElementById("rcTable").value,footer:document.getElementById("rcFooter").value,status:document.getElementById("rcStatus").value,total:document.getElementById("rcTotal").value,side:document.getElementById("rcSide").value,secondary:document.getElementById("rcSecondary").value,light:document.getElementById("rcLight").value,text:document.getElementById("rcText").value};save();toast("Warna struk disimpan");render("settings");if(currentOrderId){var ov=document.getElementById("receiptOverlay");if(ov&&!ov.classList.contains("hidden")){showReceipt(currentOrderId);}}};var sb=document.getElementById("saveBusiness");if(sb)sb.onclick=function(){db.business={name:document.getElementById("bizName").value.trim()||"PRINTPRO",tagline:document.getElementById("bizTagline").value.trim()||"PERCETAKAN & DIGITAL PRINTING",address:document.getElementById("bizAddress").value.trim()||"Alamat Percetakan Anda",phone:document.getElementById("bizPhone").value.trim()||"08xxxxxxxxxx"};save();toast("Identitas percetakan disimpan");render("settings");};var sw=document.getElementById("saveWatermark");if(sw)sw.onclick=function(){db.watermark={enabled:document.getElementById("wmEnabled").checked,text:document.getElementById("wmText").value.trim()||"BUKTI PEMBAYARAN",opacity:Math.min(.30,Math.max(.01,Number(document.getElementById("wmOpacity").value)||.08)),size:Math.min(100,Math.max(20,Number(document.getElementById("wmSize").value)||52)),angle:Math.min(60,Math.max(-60,Number(document.getElementById("wmAngle").value)||-28)),color:document.getElementById("wmColor").value||"#e60073"};save();toast("Watermark struk disimpan");render("settings");};var au=document.getElementById("adminUser"),ap=document.getElementById("adminPass"),aue=document.getElementById("adminUserEye"),ape=document.getElementById("adminPassEye");function toggleAdmin(input,eye){var show=input.type==="password";input.type=show?"text":"password";eye.textContent=show?"🙈":"👁️";eye.setAttribute("aria-label",show?"Sembunyikan":"Tampilkan");}if(aue)aue.onclick=function(){toggleAdmin(au,aue);};if(ape)ape.onclick=function(){toggleAdmin(ap,ape);};var sa=document.getElementById("saveAuth");if(sa)sa.onclick=function(){var u=document.getElementById("adminUser").value.trim(),pw=document.getElementById("adminPass").value;if(!u||!pw){toast("Username dan password wajib diisi");return;}db.auth={username:u,password:pw};save();toast("Akun login berhasil disimpan");render("settings");};var lo=document.getElementById("logoutBtn");if(lo)lo.onclick=function(){logout();};
+}
+function navigate(name){
+document.querySelectorAll("#nav button").forEach(function(b){b.classList.toggle("active",b.getAttribute("data-page")===name);});
+render(name);document.getElementById("sidebar").classList.remove("open");
+}
+document.querySelectorAll("#nav button").forEach(function(b){b.onclick=function(){navigate(b.getAttribute("data-page"));};});
+document.getElementById("menuBtn").onclick=function(){document.getElementById("sidebar").classList.toggle("open");};
+
+function openOrder(){
+document.getElementById("orderModal").classList.remove("hidden");
+document.getElementById("fName").value="";document.getElementById("fWa").value="";document.getElementById("customerList").classList.add("hidden");document.getElementById("customerList").innerHTML="";
+var sel=document.getElementById("fProduct");sel.innerHTML=db.products.map(function(p){return '<option value="'+esc(p.name)+'">'+esc(p.name)+'</option>';}).join("");
+var p=db.products[0];if(p)document.getElementById("fPrice").value=p.price;
+document.getElementById("fDeadline").value=new Date().toISOString().slice(0,10);document.getElementById("fDeadlineTime").value="17:00";
+}
+function closeOrder(){document.getElementById("orderModal").classList.add("hidden");}
+document.getElementById("closeOrder").onclick=closeOrder;document.getElementById("cancelOrder").onclick=closeOrder;
+function showCustomerSuggestions(){
+var input=document.getElementById("fName"),list=document.getElementById("customerList"),q=(input.value||"").trim().toLowerCase();
+if(!q){list.classList.add("hidden");list.innerHTML="";return;}
+var matches=db.customers.filter(function(c){return (c.name||"").toLowerCase().indexOf(q)>=0;}).slice(0,8);
+if(!matches.length){list.innerHTML='<div class="customerEmpty">Pelanggan belum ditemukan — lanjutkan untuk membuat pelanggan baru.</div>';list.classList.remove("hidden");return;}
+list.innerHTML=matches.map(function(c,i){return '<div class="customerItem" data-customer-index="'+i+'"><b>'+esc(c.name)+'</b><small>'+esc(c.wa||"WhatsApp belum diisi")+'</small></div>';}).join("");
+list.classList.remove("hidden");
+list.querySelectorAll(".customerItem").forEach(function(item){item.onclick=function(){var c=matches[Number(item.getAttribute("data-customer-index"))];input.value=c.name;document.getElementById("fWa").value=c.wa||"";list.classList.add("hidden");list.innerHTML="";};});
+}
+document.getElementById("fName").addEventListener("input",showCustomerSuggestions);
+document.getElementById("fName").addEventListener("focus",showCustomerSuggestions);
+document.addEventListener("click",function(e){if(!e.target.closest(".customerSuggest")){var l=document.getElementById("customerList");if(l){l.classList.add("hidden");}}});
+
+document.getElementById("saveOrderBtn").onclick=function(){
+var name=document.getElementById("fName").value.trim();if(!name){toast("Nama pelanggan wajib diisi");return;}
+var product=document.getElementById("fProduct").value,qty=Math.max(1,Number(document.getElementById("fQty").value)||1),price=Math.max(0,Number(document.getElementById("fPrice").value)||0),discount=Math.max(0,Number(document.getElementById("fDiscount").value)||0),dp=Math.max(0,Number(document.getElementById("fDp").value)||0);
+var id="ORD-"+String(db.orders.length+1).padStart(3,"0");
+var o={id:id,name:name,wa:document.getElementById("fWa").value,product:product,qty:qty,size:document.getElementById("fSize").value,price:price,discount:discount,dp:dp,status:"Pesanan Baru",deadline:document.getElementById("fDeadline").value,deadlineDate:document.getElementById("fDeadline").value,deadlineTime:document.getElementById("fDeadlineTime").value||"17:00",note:document.getElementById("fNote").value};
+db.orders.push(o);var c=db.customers.find(function(x){return x.name.toLowerCase()===name.toLowerCase();});if(!c)db.customers.push({name:name,wa:o.wa});else if(o.wa)c.wa=o.wa;save();closeOrder();toast("Pesanan berhasil disimpan");render("orders");
+};
+var currentPaymentOrder=null;
+function openPayment(id){var o=db.orders.find(function(x){return x.id===id;});if(!o)return;currentPaymentOrder=o;var total=orderTotal(o),paid=paymentPaid(o),sisa=Math.max(0,total-paid);document.getElementById("paymentInfo").innerHTML="<b>"+esc(o.id)+" — "+esc(o.name)+"</b><br>Total: "+money(total)+"<br>Sudah dibayar: "+money(paid)+"<br><b>Sisa: "+money(sisa)+"</b>";document.getElementById("payAmount").value=sisa;document.getElementById("payNote").value="";document.getElementById("paymentModal").classList.remove("hidden");}
+function closePayment(){document.getElementById("paymentModal").classList.add("hidden");currentPaymentOrder=null;}
+function filterPayments(){var q=(document.getElementById("paySearch").value||"").toLowerCase(),f=document.getElementById("payFilter").value,list=db.orders.filter(function(o){var match=(o.id+" "+o.name+" "+o.product).toLowerCase().indexOf(q)>=0,p=paymentPaid(o),t=orderTotal(o),st=p>=t?"lunas":p>0?"dp":"belum";return match&&(f==="all"||f===st);});document.getElementById("paymentRows").innerHTML=paymentRows(list);document.querySelectorAll(".addPayBtn").forEach(function(x){x.onclick=function(){openPayment(x.getAttribute("data-id"));};});document.querySelectorAll(".jpgBtn").forEach(function(x){x.onclick=function(){openPaymentJpg(x.getAttribute("data-id"));};});}
+var currentJpgBlob=null,currentJpgUrl="",currentJpgOrder=null;
+function openPaymentJpg(id){
+ var o=db.orders.find(function(x){return x.id===id;});if(!o)return;currentJpgOrder=o;
+ var biz=db.business||defaults.business,theme=db.receiptTheme||defaults.receiptTheme,subtotal=(Number(o.price)||0)*(Number(o.qty)||0),discount=Number(o.discount)||0,total=orderTotal(o),paid=paymentPaid(o),sisa=Math.max(0,total-paid),lunas=paid>=total;
+ var canvas=document.createElement("canvas"),ctx=canvas.getContext("2d"),w=1000,h=1540;canvas.width=w;canvas.height=h;
+ ctx.fillStyle="#f3f5f8";ctx.fillRect(0,0,w,h);
+ ctx.fillStyle="#fff";ctx.fillRect(38,38,w-76,h-76);
+
+ // Header
+ ctx.textAlign="left";ctx.fillStyle="#111";ctx.font="900 48px Arial";ctx.fillText(biz.name||"Percetakan",78,105);
+ ctx.fillStyle=theme.primary;ctx.font="700 20px Arial";ctx.fillText(biz.tagline||"PERCETAKAN & DIGITAL PRINTING",80,139);
+ ctx.font="16px Arial";var addr=String(biz.address||"-").split(/\r?\n/);addr.forEach(function(line,i){ctx.fillText(line,80,168+i*23);});ctx.fillText("WhatsApp: "+(biz.phone||"-"),80,168+addr.length*23+3);
+
+ // Service labels
+ ctx.textAlign="right";ctx.fillStyle=theme.primary;ctx.font="800 15px Arial";
+ ctx.fillText("DESAIN",900,122);ctx.fillText("CETAK",900,148);ctx.fillText("DIGITAL PRINTING",900,174);
+ ctx.textAlign="left";
+
+ // Title banner
+ ctx.fillStyle=theme.primary;ctx.fillRect(70,220,860,92);
+ ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font="900 40px Arial";ctx.fillText("NOTA PEMBAYARAN",500,273);
+ ctx.font="14px Arial";ctx.fillText("INVOICE  /  BUKTI PEMBAYARAN",500,296);
+
+ // Meta
+ ctx.textAlign="left";var y=355;
+ var meta=[["No. Invoice",o.id],["Tanggal",new Date().toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"})],["Pelanggan",o.name],["WhatsApp",o.wa||"-"],["DEADLINE",deadlineText(o)]];
+ meta.forEach(function(r){ctx.fillStyle="#555";ctx.font="17px Arial";ctx.fillText(r[0],82,y);ctx.fillStyle="#111";ctx.font="800 18px Arial";ctx.fillText(r[1],270,y);y+=42;});
+ ctx.strokeStyle="#b7bec8";ctx.setLineDash([]);
+
+ // Item table
+ var tx=70,ty=550,tw=860;
+ ctx.fillStyle=theme.primary;ctx.fillRect(tx,ty,tw,48);
+ ctx.fillStyle="#fff";ctx.textAlign="left";ctx.font="800 16px Arial";ctx.fillText("NO",90,ty+31);ctx.fillText("PRODUK / DESKRIPSI",150,ty+31);ctx.fillText("QTY",610,ty+31);ctx.fillText("SUBTOTAL",760,ty+31);
+ ctx.strokeStyle="#d7dce3";ctx.strokeRect(tx,ty,tw,48);
+ ctx.fillStyle="#111";ctx.font="800 18px Arial";ctx.fillText("1",92,ty+86);ctx.fillText(o.product,150,ty+86);
+ ctx.font="14px Arial";ctx.fillStyle="#555";ctx.fillText((o.size||"Sesuai pesanan")+" • Harga "+money(o.price),150,ty+111);
+ ctx.fillStyle="#111";ctx.font="800 18px Arial";ctx.fillText(String(o.qty),615,ty+86);ctx.textAlign="right";ctx.fillText(money(subtotal),900,ty+86);ctx.textAlign="left";
+ ctx.strokeStyle="#e1e5ea";ctx.strokeRect(tx,ty+48,tw,95);
+ if(o.note){ctx.fillStyle="#fff5fa";ctx.fillRect(70,ty+143,860,50);ctx.fillStyle="#555";ctx.font="13px Arial";ctx.fillText("Catatan: "+o.note,88,ty+174);}
+
+ // Notes box
+ var noteY=ty+205;
+ ctx.fillStyle=theme.light;ctx.fillRect(70,noteY,450,135);
+ ctx.fillStyle=theme.primary;ctx.font="900 18px Arial";ctx.fillText("Catatan",92,noteY+35);
+ ctx.fillStyle="#333";ctx.font="15px Arial";ctx.fillText("Terima kasih telah mempercayakan",92,noteY+68);ctx.fillText("kebutuhan cetak Anda kepada kami.",92,noteY+92);
+
+ // Totals box
+ var bx=555,by=noteY,bw=375;
+ ctx.strokeStyle=theme.side||"#d8dde5";ctx.strokeRect(bx,by,bw,190);
+ function sum(label,val,yy,bold,bg){
+   if(bg){ctx.fillStyle=bg;ctx.fillRect(bx,yy-25,bw,46);}
+   ctx.fillStyle="#111";ctx.textAlign="left";ctx.font=bold?"900 20px Arial":"16px Arial";ctx.fillText(label,bx+20,yy+7);
+   ctx.textAlign="right";ctx.fillText(val,bx+bw-20,yy+7);ctx.textAlign="left";
+ }
+ sum("Subtotal",money(subtotal),by+30,false);
+ sum("Diskon",money(discount),by+72,false);
+ sum("TOTAL",money(total),by+114,true,theme.total||theme.light||"#fce7f3");
+ sum("Pembayaran",money(paid),by+156,false);
+ sum("Sisa",money(sisa),by+198,true,theme.total||theme.light||"#fce7f3");
+
+ // Status
+ var statusY=noteY+165;
+ ctx.fillStyle=theme.status||(lunas?"#dcfce7":"#fff1f7");ctx.fillRect(70,statusY,450,92);
+ ctx.fillStyle=theme.secondary||(lunas?"#15803d":"#be185d");ctx.textAlign="center";ctx.font="900 27px Arial";ctx.fillText(lunas?"✓ LUNAS":"DP DITERIMA",295,statusY+42);
+ ctx.font="13px Arial";ctx.fillText(lunas?"TERIMA KASIH":"BELUM LUNAS",295,statusY+68);
+
+ // Watermark
+ var wm=db.watermark||defaults.watermark;if(wm.enabled){ctx.save();ctx.globalAlpha=Math.min(.30,Math.max(.01,Number(wm.opacity)||.08));ctx.fillStyle=wm.color||"#e60073";ctx.font="900 "+Math.min(100,Math.max(20,Number(wm.size)||52))+"px Arial";ctx.textAlign="center";ctx.translate(w/2,h/2);ctx.rotate((Number(wm.angle)||-28)*Math.PI/180);ctx.fillText(wm.text||"BUKTI PEMBAYARAN",0,0);ctx.restore();}
+ // Footer
+ ctx.fillStyle=theme.secondary;ctx.fillRect(38,h-135,w-76,97);
+ ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font="900 24px Arial";ctx.fillText("Terima Kasih",500,h-93);
+ ctx.font="13px Arial";ctx.fillText("Cetak Mudah, Hasil Maksimal • "+(biz.name||"Percetakan"),500,h-67);
+ ctx.font="11px Arial";ctx.fillText("Kualitas Terbaik   •   Proses Cepat   •   Harga Bersaing   •   Pelayanan Ramah",500,h-45);
+
+ ctx.textAlign="left";
+ canvas.toBlob(function(blob){
+   if(currentJpgUrl)URL.revokeObjectURL(currentJpgUrl);currentJpgBlob=blob;currentJpgUrl=URL.createObjectURL(blob);
+   document.getElementById("jpgPreviewImg").src=currentJpgUrl;
+   document.getElementById("jpgFileInfo").innerHTML="Format : <b>JPG</b><br>Resolusi : <b>1000 × 1540 px</b><br>Kualitas : <b>HD / Siap Kirim</b><br>Diskon : <b>"+money(discount)+"</b><br>Total : <b>"+money(total)+"</b><br>Pembayaran : <b>"+money(paid)+"</b><br>Sisa : <b>"+money(sisa)+"</b>";
+   document.getElementById("paymentJpgOverlay").classList.remove("hidden");
+ },"image/jpeg",0.95);
+}
+function downloadCurrentJpg(){
+if(!currentJpgBlob||!currentJpgOrder)return;
+var a=document.createElement("a");a.href=currentJpgUrl;a.download=currentJpgOrder.id+"-STRUK.jpg";document.body.appendChild(a);a.click();a.remove();
+}
+async function shareCurrentJpg(){
+if(!currentJpgBlob||!currentJpgOrder)return;
+var file=new File([currentJpgBlob],currentJpgOrder.id+"-STRUK.jpg",{type:"image/jpeg"});
+try{
+if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){
+await navigator.share({title:"Struk Pembayaran PRINTPRO",text:"Struk pembayaran "+currentJpgOrder.id+" - PRINTPRO",files:[file]});
+}else{downloadCurrentJpg();toast("JPG disimpan. Silakan kirim file tersebut ke WhatsApp pelanggan.");}
+}catch(e){if(e&&e.name!=="AbortError")toast("Share tidak tersedia di browser ini.");}
+}
+async function shareJpgToWhatsApp(){
+if(!currentJpgBlob||!currentJpgOrder)return;
+var file=new File([currentJpgBlob],currentJpgOrder.id+"-STRUK.jpg",{type:"image/jpeg"});
+var text="Halo "+currentJpgOrder.name+", berikut struk pembayaran PRINTPRO untuk order "+currentJpgOrder.id+".";
+try{
+  if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+    // IMPORTANT: share directly from this click. Android will show the native
+    // share sheet with the JPG already attached; choose WhatsApp there.
+    await navigator.share({title:"Struk Pembayaran PRINTPRO",text:text,files:[file]});
+    return;
+  }
+  if(navigator.share){
+    await navigator.share({title:"Struk Pembayaran PRINTPRO",text:text});
+    downloadCurrentJpg();
+    toast("Browser tidak mendukung lampiran JPG. JPG sudah disiapkan untuk dikirim.");
+    return;
+  }
+  downloadCurrentJpg();
+  toast("Browser tidak mendukung share file. JPG sudah disimpan, silakan kirim melalui WhatsApp.");
+}catch(e){
+  if(e&&e.name==="AbortError")return;
+  downloadCurrentJpg();
+  toast("Share file tidak didukung browser ini. JPG sudah disimpan.");
+} 
+}
+function printCurrentJpg(){
+if(!currentJpgUrl)return;
+var win=window.open("","_blank");if(!win){toast("Pop-up diblokir browser.");return;}
+win.document.write('<html><head><title>Struk '+currentJpgOrder.id+'</title><style>body{margin:0;text-align:center;background:white}img{max-width:100%;height:auto}@media print{img{width:100%}}</style></head><body><img src="'+currentJpgUrl+'"><script>window.onload=function(){window.print();};<\/script></body></html>');win.document.close();
+}
+function showReceipt(id){
+ var o=db.orders.find(function(x){return x.id===id;});if(!o)return;currentOrderId=id;
+ var biz=db.business||defaults.business,theme=db.receiptTheme||defaults.receiptTheme,total=orderTotal(o),subtotal=(Number(o.price)||0)*(Number(o.qty)||0),discount=Number(o.discount)||0,paid=paymentPaid(o),sisa=Math.max(0,total-paid),lunas=paid>=total;
+ var hist=Array.isArray(o.payments)?o.payments:[];
+ var lastMethod=hist.length?hist[hist.length-1].method:"Tunai";
+ var wm=db.watermark||defaults.watermark;document.getElementById("receipt").style.setProperty("--receipt-primary",theme.primary||"#e60073");document.getElementById("receipt").style.setProperty("--receipt-text",theme.text||"#111827");document.getElementById("receipt").style.setProperty("--receipt-secondary",theme.secondary||"#a5004e");document.getElementById("receipt").style.setProperty("--receipt-light",theme.light||"#fce7f3");document.getElementById("receipt").style.setProperty("--receipt-meta",theme.meta||theme.light||"#fdf1f7");document.getElementById("receipt").style.setProperty("--receipt-table",theme.table||theme.primary||"#e60073");document.getElementById("receipt").style.setProperty("--receipt-footer",theme.footer||theme.secondary||"#111827");document.getElementById("receipt").style.setProperty("--receipt-status",theme.status||theme.light||"#fce7f3");document.getElementById("receipt").style.setProperty("--receipt-total",theme.total||theme.light||"#fce7f3");document.getElementById("receipt").style.setProperty("--receipt-side",theme.side||"#e5e7eb");document.getElementById("receipt").innerHTML='<div class="receiptWatermark" style="display:'+(wm.enabled?'flex':'none')+'"><span style="opacity:'+Number(wm.opacity||.08)+';font-size:'+Number(wm.size||52)+'px;color:'+esc(wm.color||'#e60073')+';transform:rotate('+Number(wm.angle||-28)+'deg)">'+esc(wm.text||'BUKTI PEMBAYARAN')+'</span></div>'+ '<div class="receiptContent">' +
+ '<div class="receiptBrand"><div class="receiptLogo">'+esc(biz.name||"Percetakan")+'</div><div class="receiptTag">'+esc(biz.tagline||"PERCETAKAN & DIGITAL PRINTING")+'</div><div class="receiptContact">📍 '+esc(biz.address||"-")+'\n📱 WhatsApp: '+esc(biz.phone||"-")+'</div></div>'+
+ '<div style="margin-top:11px" class="receiptTitle">NOTA PEMBAYARAN</div>'+
+ '<div class="rmeta"><div class="metaBox"><div class="metaLabel">No. Invoice</div><div class="metaValue">'+esc(o.id)+'</div></div><div class="metaBox"><div class="metaLabel">Tanggal</div><div class="metaValue">'+new Date().toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"})+'</div></div><div class="metaBox"><div class="metaLabel">Pelanggan</div><div class="metaValue">'+esc(o.name)+'</div></div><div class="metaBox"><div class="metaLabel">WhatsApp Pelanggan</div><div class="metaValue">'+esc(o.wa||"-")+'</div></div><div class="metaBox deadlineBox"><div class="metaLabel">Deadline Pesanan</div><div class="metaValue">⏰ '+esc(deadlineText(o))+'</div></div></div>'+
+ '<div class="itemHead"><span>PRODUK / DESKRIPSI</span><span>QTY</span><span>SUBTOTAL</span></div>'+
+ '<div class="item"><div class="itemMain"><span>'+esc(o.product)+'</span><span>'+o.qty+'</span><span>'+money(subtotal)+'</span></div><div class="itemSub">'+esc(o.size||"Sesuai pesanan")+' • Harga satuan '+money(o.price)+'</div>'+(o.note?'<div class="itemSub">Catatan: '+esc(o.note)+'</div>':"")+'</div>'+
+ '<div class="totalBox"><div class="sumRow"><span>Subtotal</span><b>'+money(subtotal)+'</b></div><div class="sumRow"><span>Diskon</span><b>'+money(discount)+'</b></div><div class="sumRow total"><span>TOTAL</span><b>'+money(total)+'</b></div><div class="sumRow"><span>Pembayaran</span><b>'+money(paid)+'</b></div><div class="sumRow"><span>Metode</span><b>'+esc(lastMethod)+'</b></div><div class="sumRow sisa"><span>SISA</span><b>'+money(sisa)+'</b></div></div>'+
+ '<div class="paid">'+(lunas?'✓ LUNAS — TERIMA KASIH':'DP DITERIMA — BELUM LUNAS')+'</div><div class="thanks">Terima Kasih</div><div class="small">Simpan struk ini sebagai bukti pembayaran.<br>Sampai jumpa di pesanan berikutnya!</div>'+
+ '<div class="serviceRow"><div class="service"><b>✎</b>DESAIN</div><div class="service"><b>▣</b>CETAK</div><div class="service"><b>▤</b>DIGITAL</div><div class="service"><b>★</b>MERCHANDISE</div></div>'+
+ '<div class="receiptFooter">'+esc(biz.name||"Percetakan")+' • '+esc(biz.tagline||"PERCETAKAN & DIGITAL PRINTING")+'</div></div>';
+ document.getElementById("receiptOverlay").classList.remove("hidden");
+}
+function closeReceipt(){document.getElementById("receiptOverlay").classList.add("hidden");}
+document.getElementById("closeReceipt").onclick=closeReceipt;
+document.getElementById("closePayment").onclick=closePayment;document.getElementById("cancelPayment").onclick=closePayment;
+document.getElementById("savePayment").onclick=function(){if(!currentPaymentOrder)return;var amount=Math.max(0,Number(document.getElementById("payAmount").value)||0),total=orderTotal(currentPaymentOrder),already=paymentPaid(currentPaymentOrder),sisa=Math.max(0,total-already);if(amount<=0){toast("Jumlah pembayaran harus lebih dari 0");return;}if(amount>sisa){toast("Pembayaran melebihi sisa tagihan");return;}if(!Array.isArray(currentPaymentOrder.payments))currentPaymentOrder.payments=[];currentPaymentOrder.payments.push({amount:amount,method:document.getElementById("payMethod").value,note:document.getElementById("payNote").value,date:new Date().toISOString()});save();closePayment();toast("Pembayaran berhasil ditambahkan");render("payments");};
+document.getElementById("closeJpg").onclick=function(){document.getElementById("paymentJpgOverlay").classList.add("hidden");};
+document.getElementById("downloadJpgBtn").onclick=downloadCurrentJpg;
+document.getElementById("shareJpgBtn").onclick=shareJpgToWhatsApp;
+document.getElementById("shareOtherBtn").onclick=shareCurrentJpg;
+document.getElementById("printJpgBtn").onclick=printCurrentJpg;
+document.getElementById("printBtn").onclick=function(){window.print();};
+document.getElementById("waBtn").onclick=function(){
+var o=db.orders.find(function(x){return x.id===currentOrderId;});if(!o)return;var total=orderTotal(o),sisa=Math.max(0,total-paymentPaid(o));
+var msg="*PRINTPRO — STRUK PEMBAYARAN*\\n\\nNo. Invoice: "+o.id+"\\nPelanggan: "+o.name+"\\nProduk: "+o.product+" x "+o.qty+"\\nUkuran: "+(o.size||"-")+"\\nTotal: "+money(total)+"\\nPembayaran: "+money(paymentPaid(o))+"\\nSisa: "+money(sisa)+"\\nDeadline: "+deadlineText(o)+"\\nStatus: "+(paymentPaid(o)>=total?"LUNAS":"DP DITERIMA")+"\\n\\nTerima kasih telah bertransaksi dengan PRINTPRO.";
+var w=(o.wa||"").replace(/\\D/g,"");var target=w?(w.indexOf("62")===0?w:"62"+w.replace(/^0/,"")):"";window.open(target?"https://wa.me/"+target+"?text="+encodeURIComponent(msg):"https://wa.me/?text="+encodeURIComponent(msg),"_blank");
+};
+document.getElementById("shareImageBtn").onclick=async function(){
+var o=db.orders.find(function(x){return x.id===currentOrderId;});if(!o)return;
+var canvas=document.createElement("canvas"),ctx=canvas.getContext("2d"),w=760,h=1120;canvas.width=w;canvas.height=h;
+ctx.fillStyle="#f3f6fb";ctx.fillRect(0,0,w,h);ctx.fillStyle="#fff";ctx.fillRect(28,28,w-56,h-56);var biz=db.business||defaults.business,theme=db.receiptTheme||defaults.receiptTheme;ctx.fillStyle=theme.text||"#111827";ctx.textAlign="center";ctx.font="900 32px Arial";ctx.fillText(biz.name,w/2,88);ctx.fillStyle=theme.text||"#111827";ctx.font="14px Arial";var addr2=String(biz.address||"-").split(/\r?\n/);addr2.forEach(function(line,i){ctx.fillText(line,w/2,115+i*20);});ctx.fillText("WhatsApp: "+biz.phone,w/2,115+addr2.length*20+2);ctx.font="700 16px Arial";ctx.fillText(biz.tagline||"PERCETAKAN & DIGITAL PRINTING",w/2,160);ctx.fillStyle=theme.primary;ctx.font="900 25px Arial";ctx.fillText("STRUK PEMBAYARAN",w/2,205);
+ctx.strokeStyle=theme.secondary||"#a5004e";ctx.setLineDash([8,7]);ctx.beginPath();ctx.moveTo(55,210);ctx.lineTo(w-55,210);ctx.stroke();ctx.setLineDash([]);
+var total=orderTotal(o),sisa=Math.max(0,total-paymentPaid(o)),lines=[["No. Invoice",o.id],["Tanggal",new Date().toLocaleDateString("id-ID")],["Pelanggan",o.name],["WhatsApp",o.wa||"-"],["Deadline",deadlineText(o)],["Produk",o.product+" x "+o.qty],["Ukuran",o.size||"-"],["Subtotal",money((Number(o.price)||0)*(Number(o.qty)||0))],["Diskon",money(Number(o.discount)||0)],["TOTAL",money(total)],["Pembayaran",money(paymentPaid(o))],["SISA",money(sisa)]];
+var y=260;ctx.textAlign="left";
+lines.forEach(function(r,i){ctx.fillStyle=theme.text||"#111827";ctx.font=(i===7||i===9)?"900 23px Arial":"16px Arial";ctx.fillText(r[0],65,y);ctx.textAlign="right";ctx.fillStyle=theme.text||"#111827";ctx.fillText(r[1],w-65,y);ctx.textAlign="left";y+=42;});
+ctx.fillStyle=theme.status||theme.light;ctx.fillRect(55,y-10,w-110,55);ctx.fillStyle=theme.secondary;ctx.font="900 19px Arial";ctx.textAlign="center";ctx.fillText(paymentPaid(o)>=total?"✓ LUNAS — TERIMA KASIH":"DP DITERIMA — BELUM LUNAS",w/2,y+25);ctx.fillStyle="#111";ctx.font="900 25px Arial";ctx.fillText("TERIMA KASIH",w/2,y+90);ctx.font="14px Arial";ctx.fillStyle=theme.text||"#111827";ctx.fillText("Simpan struk ini sebagai bukti pembayaran.",w/2,y+120);ctx.fillText("Cetak Mudah, Hasil Maksimal",w/2,y+150);var wm=db.watermark||defaults.watermark;if(wm.enabled){ctx.save();ctx.globalAlpha=Math.min(.30,Math.max(.01,Number(wm.opacity)||.08));ctx.fillStyle=wm.color||"#e60073";ctx.font="900 "+Math.min(100,Math.max(20,Number(wm.size)||52))+"px Arial";ctx.textAlign="center";ctx.translate(w/2,h/2);ctx.rotate((Number(wm.angle)||-28)*Math.PI/180);ctx.fillText(wm.text||"BUKTI PEMBAYARAN",0,0);ctx.restore();}canvas.toBlob(async function(blob){var file=new File([blob],o.id+"-PRINTPRO.png",{type:"image/png"});try{if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){await navigator.share({title:"Struk PRINTPRO",text:"Struk pembayaran PRINTPRO",files:[file]});}else{var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=o.id+"-PRINTPRO.png";a.click();toast("Gambar struk dibuat. Silakan kirim ke WhatsApp.");}}catch(e){toast("Share dibatalkan.");}},"image/png",1);
+};
+(function(){
+  var ua=navigator.userAgent||"";
+  var mobileUA=/Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+  var smallScreen=(window.screen&&Math.min(Number(window.screen.width)||9999,Number(window.screen.height)||9999)<=900);
+  if(mobileUA||smallScreen){document.documentElement.classList.add("pp-mobile");}
+  window.addEventListener("resize",function(){
+    var m=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"") || (window.screen&&Math.min(Number(window.screen.width)||9999,Number(window.screen.height)||9999)<=900);
+    document.documentElement.classList.toggle("pp-mobile",!!m);
+  });
+})();
+initLogin();
+if(sessionStorage.getItem("printpro_logged_in")==="1")render("dashboard");
+})();
+</script>
+</body>
+</html>
